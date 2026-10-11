@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JuJu.toko - Katalog & Perkakas Teknik</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f7f5ef;
+            color: #2b2b2b;
+        }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-orange-500 selection:text-white relative">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-stone-200 bg-[#f7f5ef]/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo dengan Fitur Klik 3x untuk Stealth Admin Access -->
+            <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="handleLogoClick()">
+                <div class="bg-orange-600 p-2 rounded-xl text-white shadow-sm">
+                    <i class="fa-solid fa-store text-base"></i>
+                </div>
+                <span class="font-extrabold text-xl tracking-tight text-stone-900">JuJu<span class="text-orange-600">.toko</span></span>
+            </div>
+            
+            <!-- Navigasi Tab Publik -->
+            <nav class="flex items-center space-x-3 sm:space-x-6 text-sm font-semibold text-stone-600">
+                <button onclick="navigateTo('catalog')" id="navCatalog" class="hover:text-orange-600 transition">Katalog</button>
+                <button onclick="navigateTo('about')" id="navAbout" class="hover:text-orange-600 transition">About Us</button>
+                <a href="https://wa.me/6288230515458?text=Halo%20Admin,%20saya%20ingin%20bertanya%20mengenai%20ketersediaan%20spare%20part%20atau%20perkakas%20di%20toko" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 shadow-sm">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Contact Us</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-6 py-10 space-y-12">
+
+        <!-- CATALOG VIEW -->
+        <section id="catalogView" class="space-y-10">
+            <div class="space-y-4 max-w-3xl">
+                <span class="text-xs uppercase tracking-widest text-stone-500 font-semibold border-b border-stone-300 pb-1">Pusat Perkakas & Spare Part Terlengkap</span>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-stone-900 leading-[1.1]">
+                    Solusi Mesin & <span class="text-orange-700/90">Alat Teknik Anda.</span>
+                </h1>
+                <p class="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
+                    Menyediakan berbagai produk teknik dan suku cadang berkualitas sesuai kebutuhan Anda.
+                </p>
+                <div class="flex items-center space-x-3 text-xs text-stone-500 pt-2 font-medium">
+                    <span class="flex items-center space-x-1.5"><i class="fa-regular fa-circle-check text-emerald-600"></i><span>Stok & Harga Terupdate</span></span>
+                    <span>•</span>
+                    <span id="totalProductBadge">0 produk tersedia</span>
+                </div>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div class="space-y-4">
+                <h2 class="text-xl font-bold text-stone-900 tracking-tight">Eksplor Produk</h2>
+                <div class="flex flex-col md:flex-row gap-4 justify-between items-center bg-stone-200/50 border border-stone-300/60 p-3 rounded-2xl">
+                    <div class="relative w-full md:w-96">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-stone-400 text-sm"></i>
+                        <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Cari nama barang, ukuran, atau kode part..." class="w-full bg-white border border-stone-300 rounded-xl pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400 shadow-sm">
+                    </div>
+                    
+                    <!-- Dropdown Kategori Berurutan A-Z dengan Teks Label Kategori -->
+                    <div class="w-full md:w-auto flex items-center space-x-2">
+                        <label for="categorySelectFilter" class="text-xs font-bold text-stone-600 uppercase tracking-wider shrink-0 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-filter text-orange-600"></i>
+                            <span>Kategori:</span>
+                        </label>
+                        <select id="categorySelectFilter" onchange="filterCategoryDropdown(this.value)" class="w-full md:w-64 bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm font-bold text-stone-700 focus:outline-none focus:border-orange-500 transition shadow-sm">
+                            <!-- Dinamis Kategori A-Z -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dinamis Produk -->
+            </div>
+        </section>
+
+        <!-- ABOUT US VIEW -->
+        <section id="aboutView" class="hidden space-y-12 max-w-4xl mx-auto py-6">
+            <!-- Hero About -->
+            <div class="text-center space-y-6 max-w-2xl mx-auto">
+                <span class="text-xs uppercase tracking-widest text-orange-600 font-bold border-b border-orange-200 pb-1">GET TO KNOW US!</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900 leading-tight">
+                    Kenalan Yuk Sama <span class="text-orange-700">JuJu.toko</span>! 🛠️
+                </h2>
+                <div class="space-y-4 text-stone-600 text-sm sm:text-base leading-relaxed text-left sm:text-center px-2">
+                    <p>
+                        JuJu.toko hadir untuk menyediakan berbagai kebutuhan perkakas, suku cadang mesin, dan perlengkapan teknik. Kami berkomitmen untuk membantu pelanggan menemukan produk yang sesuai melalui informasi yang jelas dan pelayanan responsif.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Value Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                <div class="bg-white border border-stone-300/80 p-6 rounded-3xl space-y-3 shadow-xs">
+                    <div class="w-10 h-10 bg-orange-100 text-orange-700 rounded-2xl flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="font-bold text-stone-900 text-base">Kualitas Terjamin</h3>
+                    <p class="text-stone-500 text-xs leading-relaxed">Seluruh produk dipilih secara teliti dari produsen dan supplier terpercaya untuk memenuhi kebutuhan teknik[cite: 9].</p>
+                </div>
+                <div class="bg-white border border-stone-300/80 p-6 rounded-3xl space-y-3 shadow-xs">
+                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="font-bold text-stone-900 text-base">Pelayanan Responsif</h3>
+                    <p class="text-stone-500 text-xs leading-relaxed">Tim siap membantu memberikan informasi spesifikasi, ketersediaan stok, dan kesesuaian produk[cite: 9].</p>
+                </div>
+                <div class="bg-white border border-stone-300/80 p-6 rounded-3xl space-y-3 shadow-xs">
+                    <div class="w-10 h-10 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <h3 class="font-bold text-stone-900 text-base">Harga Kompetitif</h3>
+                    <p class="text-stone-500 text-xs leading-relaxed">Menawarkan pilihan produk dengan harga bersaing untuk mendukung penggunaan pribadi hingga usaha[cite: 9].</p>
+                </div>
+            </div>
+
+            <!-- Team Section (4 Orang) -->
+            <div class="space-y-6 pt-8 border-t border-stone-200">
+                <div class="text-center space-y-2">
+                    <h3 class="text-2xl font-bold text-stone-900">Kelompok 2</h3>
+                    <p class="text-xs text-stone-500">Pasukan inti yang siap sedia nyiapin pesanan dan ngecek kualitas barang tiap hari.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+                    <!-- Anggota 1 -->
+                    <div class="bg-white border border-stone-300/80 rounded-3xl overflow-hidden shadow-xs group">
+                        <div class="h-56 bg-stone-200 overflow-hidden relative">
+                            <img src="team1.jpg" alt="Tim 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60';">
+                        </div>
+                        <div class="p-4 text-center space-y-1">
+                            <h4 class="font-bold text-stone-900 text-sm">Nama Anggota 1</h4>
+                            <p class="text-[11px] text-orange-600 font-semibold">Lead & Operasional</p>
+                            <p class="text-[10px] text-stone-500 pt-1">"Biar sat-set dan beres."</p>
+                        </div>
+                    </div>
+
+                    <!-- Anggota 2 -->
+                    <div class="bg-white border border-stone-300/80 rounded-3xl overflow-hidden shadow-xs group">
+                        <div class="h-56 bg-stone-200 overflow-hidden relative">
+                            <img src="team2.jpg" alt="Tim 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60';">
+                        </div>
+                        <div class="p-4 text-center space-y-1">
+                            <h4 class="font-bold text-stone-900 text-sm">Nama Anggota 2</h4>
+                            <p class="text-[11px] text-orange-600 font-semibold">Specialist Spare Parts</p>
+                            <p class="text-[10px] text-stone-500 pt-1">"Aman, presisi, jos."</p>
+                        </div>
+                    </div>
+
+                    <!-- Anggota 3 -->
+                    <div class="bg-white border border-stone-300/80 rounded-3xl overflow-hidden shadow-xs group">
+                        <div class="h-56 bg-stone-200 overflow-hidden relative">
+                            <img src="team3.jpg" alt="Tim 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60';">
+                        </div>
+                        <div class="p-4 text-center space-y-1">
+                            <h4 class="font-bold text-stone-900 text-sm">Nama Anggota 3</h4>
+                            <p class="text-[11px] text-orange-600 font-semibold">Logistik & Packing</p>
+                            <p class="text-[10px] text-stone-500 pt-1">"Packing rapi anti-penyok."</p>
+                        </div>
+                    </div>
+
+                    <!-- Anggota 4 -->
+                    <div class="bg-white border border-stone-300/80 rounded-3xl overflow-hidden shadow-xs group">
+                        <div class="h-56 bg-stone-200 overflow-hidden relative">
+                            <img src="team4.jpg" alt="Tim 4" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=60';">
+                        </div>
+                        <div class="p-4 text-center space-y-1">
+                            <h4 class="font-bold text-stone-900 text-sm">Nama Anggota 4</h4>
+                            <p class="text-[11px] text-orange-600 font-semibold">Admin & Customer Service</p>
+                            <p class="text-[10px] text-stone-500 pt-1">"Siap balas chat kilat!"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN CMS VIEW -->
+        <section id="adminView" class="hidden space-y-8 max-w-4xl mx-auto">
+            <!-- Login Box -->
+            <div id="loginBox" class="bg-white border border-stone-300/80 rounded-3xl p-8 sm:p-10 shadow-xl max-w-md mx-auto mt-10">
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-bold text-stone-900 tracking-tight">Otentikasi Admin</h2>
+                    <p class="text-stone-500 text-xs mt-1">Masukkan PIN untuk mengelola katalog toko.</p>
+                </div>
+                <div class="space-y-4">
+                    <input type="password" id="adminPin" placeholder="Masukkan PIN Admin" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-center tracking-widest text-stone-800 placeholder:text-stone-400">
+                    <button onclick="verifyAdmin()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-semibold py-3 rounded-xl transition shadow-md text-sm">Masuk Dashboard</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Panel -->
+            <div id="adminPanel" class="hidden space-y-8">
+                <div class="bg-white border border-stone-300/80 rounded-3xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
+                    <div>
+                        <h2 class="text-lg font-bold text-stone-900">Panel CMS Toko</h2>
+                        <p class="text-stone-500 text-xs">Kelola produk perkakas dan backup data katalog dengan mudah.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="exportData()" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-download"></i><span>Backup (.json)</span>
+                        </button>
+                        <label class="bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5">
+                            <i class="fa-solid fa-upload"></i><span>Restore</span>
+                            <input type="file" id="importFile" accept=".json" onchange="importData(event)" class="hidden">
+                        </label>
+                        <button onclick="logoutAdmin()" class="bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 px-3 py-2 rounded-xl text-xs font-bold transition">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Add / Edit Product -->
+                <div class="bg-white border border-stone-300/80 rounded-3xl p-8 shadow-sm">
+                    <h3 id="formTitle" class="text-base font-bold text-stone-900 mb-6 flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-plus text-orange-600"></i>
+                        <span>Tambah Produk / Spare Part Baru</span>
+                    </h3>
+                    <form id="productForm" onsubmit="handleFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <input type="hidden" id="editIndex" value="">
+                        
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Nama Barang / Spare Part <span class="text-rose-500">*Wajib</span></label>
+                            <input type="text" id="prodName" required placeholder="Contoh: Batu Asah HSS / Anvil Impact Wrench" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Kode Part / SKU <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="text" id="prodPartNo" placeholder="Contoh: CP797 / AS-725N" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 font-mono placeholder:text-stone-400">
+                        </div>
+
+                        <!-- Kategori dengan Opsi Pilih atau Buat Baru -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Kategori <span class="text-rose-500">*Wajib</span></label>
+                            <div class="space-y-2">
+                                <select id="prodCategorySelect" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 font-semibold">
+                                    <!-- Dinamis Kategori -->
+                                </select>
+                                <input type="text" id="prodCategoryCustom" placeholder="Ketik kategori baru..." class="hidden w-full bg-stone-50 border border-orange-400 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                                <button type="button" id="toggleCategoryBtn" onclick="toggleNewCategoryInput()" class="text-xs text-orange-600 font-bold hover:underline flex items-center space-x-1">
+                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                    <span id="toggleCategoryText">Buat kategori baru</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Harga (Rp) <span class="text-rose-500">*Wajib</span></label>
+                            <input type="number" id="prodPrice" required placeholder="110000" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Kondisi Barang <span class="text-stone-400">(Opsional)</span></label>
+                            <select id="prodCondition" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800">
+                                <option value="Baru / Original">Baru / Original</option>
+                                <option value="OEM / Replacement">OEM / Replacement</option>
+                                <option value="Kondisi Normal / Bekas">Kondisi Normal / Bekas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Catatan / Garansi Toko <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="text" id="prodWarranty" placeholder="Contoh: Ready Stok / Presisi Tinggi" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Ukuran / Spesifikasi <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="text" id="prodFitment" placeholder="Contoh: 1 Inch / Grid 1000 / D8x53mm" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Berat Barang <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="text" id="prodWeight" placeholder="Contoh: 400 Gram" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Link E-Commerce <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="url" id="prodLink" placeholder="https://..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Link Video Produk <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="url" id="prodVideo" placeholder="Link Youtube / TikTok video..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Gambar Produk <span class="text-stone-400">(Opsional)</span></label>
+                            <input type="file" id="prodImage" accept="image/*" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-stone-900 file:text-white hover:file:bg-stone-800 transition">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2">Deskripsi Detail / Kecocokan Mesin <span class="text-stone-400">(Opsional)</span></label>
+                            <textarea id="prodDesc" rows="3" placeholder="Tuliskan spesifikasi teknis, tipe mesin yang cocok, atau info pemesanan..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400"></textarea>
+                        </div>
+                        <div class="sm:col-span-2 pt-2 flex gap-3">
+                            <button type="submit" id="submitBtn" class="flex-1 bg-stone-900 hover:bg-stone-800 text-white font-semibold py-3.5 rounded-xl transition shadow-md text-sm">Simpan Produk</button>
+                            <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden bg-stone-200 hover:bg-stone-300 text-stone-700 font-semibold px-6 py-3.5 rounded-xl transition text-sm">Batal</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Category Management Section -->
+                <div class="bg-white border border-stone-300/80 rounded-3xl p-8 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-stone-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-tags text-orange-600"></i>
+                        <span>Daftar Kategori Aktif</span>
+                    </h3>
+                    <p class="text-xs text-stone-500">Klik tombol hapus pada kategori jika ingin mengubah kategori produk terkait menjadi "Uncategorized".</p>
+                    <div id="adminCategoryList" class="flex flex-wrap gap-2 pt-2">
+                        <!-- Render list kategori admin -->
+                    </div>
+                </div>
+
+                <!-- Product Management List -->
+                <div class="bg-white border border-stone-300/80 rounded-3xl p-8 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <h3 class="text-base font-bold text-stone-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-list-check text-orange-600"></i>
+                            <span>Daftar Kelola Produk (Edit / Hapus)</span>
+                        </h3>
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-stone-400 text-xs"></i>
+                            <input type="text" id="adminSearchInput" oninput="renderAdminList()" placeholder="Cari untuk edit/hapus..." class="w-full bg-stone-50 border border-stone-300 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-orange-500 transition text-stone-800 placeholder:text-stone-400">
+                        </div>
+                    </div>
+                    <div id="adminProductList" class="divide-y divide-stone-200 max-h-96 overflow-y-auto pr-2">
+                        <!-- Render list admin -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PRODUCT DETAIL MODAL (Pop-Up Detail Luas) -->
+    <div id="productModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 sm:p-6 overflow-y-auto transition-opacity duration-300 opacity-0">
+        <div class="bg-white border border-stone-200 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl relative my-auto transform transition-transform duration-300 scale-95" id="modalContent">
+            <!-- Close Button -->
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 bg-stone-900/50 hover:bg-stone-900 text-white w-9 h-9 rounded-full flex items-center justify-center transition z-10">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+
+            <div class="flex flex-col md:flex-row max-h-[85vh] overflow-y-auto">
+                <!-- Modal Gambar -->
+                <div class="md:w-1/2 bg-stone-100 relative h-64 md:h-auto min-h-[250px] flex items-center justify-center">
+                    <img id="modalImage" src="" alt="Detail Produk" class="w-full h-full object-cover">
+                    <div id="modalImagePlaceholder" class="hidden text-stone-400 text-xs flex-col items-center">
+                        <i class="fa-solid fa-box text-3xl mb-2"></i>
+                        <span>Belum ada gambar</span>
+                    </div>
+                    <span id="modalCategory" class="absolute top-4 left-4 bg-white/90 backdrop-blur-md border border-stone-200 text-stone-800 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"></span>
+                </div>
+
+                <!-- Modal Info -->
+                <div class="md:w-1/2 p-6 space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div>
+                            <span id="modalPartNo" class="text-[10px] font-mono bg-stone-100 text-stone-600 px-2 py-0.5 rounded border border-stone-200"></span>
+                            <h3 id="modalName" class="text-xl font-bold text-stone-900 mt-1 leading-snug"></h3>
+                            <p id="modalPrice" class="text-orange-600 font-extrabold text-2xl mt-1"></p>
+                        </div>
+
+                        <!-- Badges -->
+                        <div id="modalBadges" class="flex flex-wrap gap-1.5 text-[11px]"></div>
+
+                        <!-- Ukuran / Spesifikasi -->
+                        <div id="modalFitmentContainer" class="bg-stone-50 border border-stone-200/80 p-3 rounded-xl space-y-1">
+                            <span class="font-bold text-stone-800 text-xs block"><i class="fa-solid fa-ruler-combined text-orange-600 mr-1.5"></i>Ukuran / Spesifikasi:</span>
+                            <p id="modalFitment" class="text-xs text-stone-600 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Deskripsi -->
+                        <div class="space-y-1">
+                            <span class="font-bold text-stone-800 text-xs block">Deskripsi Produk:</span>
+                            <p id="modalDesc" class="text-xs text-stone-600 leading-relaxed whitespace-pre-line"></p>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="space-y-2 pt-3 border-t border-stone-100">
+                        <a id="modalWaBtn" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition shadow-xs">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>Pesan via WhatsApp</span>
+                        </a>
+
+                        <div class="grid grid-cols-2 gap-2" id="modalExtraLinks">
+                            <a id="modalShopBtn" href="" target="_blank" class="bg-stone-100 hover:bg-stone-900 text-stone-800 hover:text-white border border-stone-200 py-2 rounded-xl font-bold text-[11px] flex items-center justify-center space-x-1.5 transition">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                <span>TikTok / Olshop</span>
+                            </a>
+                            <a id="modalVideoBtn" href="" target="_blank" class="bg-orange-50 hover:bg-orange-600 text-orange-700 hover:text-white border border-orange-200 py-2 rounded-xl font-bold text-[11px] flex items-center justify-center space-x-1.5 transition">
+                                <i class="fa-solid fa-video"></i>
+                                <span>Preview Video</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storeWaNumber = "6288230515458";
+
+        // ==========================================
+        // ANCHOR: ADMIN_PIN (Ubah PIN admin langsung di sini)
+        // ==========================================
+        const ADMIN_PIN = "31125013";
+
+        let defaultProducts = [
+            {
+                id: 1,
+                name: "Anvil Impact Wrench 1 Inch CP797",
+                partNo: "CP797-ANV",
+                category: "Spare Part",
+                price: 1010000,
+                condition: "Baru / Original",
+                warranty: "Ready Stok",
+                weight: "850 Gram",
+                fitment: "Ukuran: 1 Inch Heavy Duty",
+                link: "",
+                video: "",
+                desc: "Spare part as anvil impact wrench ukuran 1 inch kualitas teruji untuk bengkel dan industri.",
+                image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=60"
+            },
+            {
+                id: 2,
+                name: "Batu Asah HSS Grid 1000 Wipro",
+                partNo: "WIP-1000",
+                category: "Batu Asah",
+                price: 110000,
+                condition: "Baru / Original",
+                warranty: "Kualitas Premium",
+                weight: "500 Gram",
+                fitment: "Grid: 1000 (Halus & Tajam)",
+                link: "",
+                video: "",
+                desc: "Batu asah perkakas tangan dan pisau mesin presisi tinggi.",
+                image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=500&auto=format&fit=crop&q=60"
+            }
+        ];
+
+        let allProducts = [];
+        let currentCategory = 'All';
+        let isCreatingNewCategory = false;
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+
+        function getProducts() {
+            const saved = localStorage.getItem('etalase_serba_ada');
+            return saved ? JSON.parse(saved) : defaultProducts;
+        }
+
+        function saveProducts(products) {
+            localStorage.setItem('etalase_serba_ada', JSON.stringify(products));
+        }
+
+        // Trik Buka Admin dengan Klik Logo 3 kali
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+
+            if (logoClickCount === 3) {
+                logoClickCount = 0;
+                navigateTo('admin');
+            } else {
+                logoClickTimer = setTimeout(() => {
+                    if (logoClickCount < 3) {
+                        navigateTo('catalog');
+                    }
+                    logoClickCount = 0;
+                }, 400);
+            }
+        }
+
+        function navigateTo(tab) {
+            if (tab === 'admin') {
+                window.location.hash = 'admin';
+            } else if (tab === 'about') {
+                window.location.hash = 'about';
+            } else {
+                window.location.hash = 'catalog';
+            }
+            handleRouting();
+        }
+
+        function handleRouting() {
+            const hash = window.location.hash.replace('/', '');
+            const catalogView = document.getElementById('catalogView');
+            const aboutView = document.getElementById('aboutView');
+            const adminView = document.getElementById('adminView');
+
+            catalogView.classList.add('hidden');
+            aboutView.classList.add('hidden');
+            adminView.classList.add('hidden');
+
+            if (hash === '#admin') {
+                adminView.classList.remove('hidden');
+                renderAdminList();
+                renderAdminCategories();
+                populateCategoryDropdowns();
+            } else if (hash === '#about') {
+                aboutView.classList.remove('hidden');
+            } else {
+                catalogView.classList.remove('hidden');
+                loadProducts();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('hashchange', handleRouting);
+
+        function verifyAdmin() {
+            const pin = document.getElementById('adminPin').value;
+            if (pin === ADMIN_PIN) {
+                document.getElementById('loginBox').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                renderAdminList();
+                renderAdminCategories();
+                populateCategoryDropdowns();
+            } else {
+                alert("PIN Salah! Masukkan PIN yang benar.");
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminPin').value = '';
+            document.getElementById('loginBox').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            window.location.hash = 'catalog';
+        }
+
+        function loadProducts() {
+            allProducts = getProducts();
+            document.getElementById('totalProductBadge').innerText = `${allProducts.length} produk tersedia`;
+            renderCategoriesDropdown();
+            renderProducts(allProducts);
+        }
+
+        // Render Katalog Utama Grid (Menampilkan Gambar, Kategori, Kode Part/SKU, Nama, Harga)
+        function renderProducts(products) {
+            const grid = document.getElementById('productGrid');
+            if (products.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-16 text-stone-400 bg-white border border-stone-200 rounded-3xl"><p>Belum ada produk yang tersedia.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = products.map(p => `
+                <div onclick="openProductModal(${p.id})" class="bg-white border border-stone-200/90 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between group hover:border-orange-500/50 transition duration-300 cursor-pointer">
+                    <div>
+                        <div class="relative h-48 overflow-hidden bg-stone-100 flex items-center justify-center">
+                            ${p.image ? `<img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">` : `<div class="text-stone-400 text-xs flex flex-col items-center"><i class="fa-solid fa-box text-2xl mb-1"></i><span>Belum ada gambar</span></div>`}
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md border border-stone-200 text-stone-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">${p.category}</span>
+                            ${p.partNo ? `<span class="absolute bottom-3 left-3 bg-stone-900/80 backdrop-blur-md text-white text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-md shadow-xs">SKU: ${p.partNo}</span>` : ''}
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <h3 class="font-bold text-stone-900 text-base line-clamp-1 group-hover:text-orange-600 transition">${p.name}</h3>
+                            <p class="text-orange-700 font-extrabold text-lg">Rp ${Number(p.price).toLocaleString('id-ID')}</p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0">
+                        <span class="text-xs text-stone-400 font-semibold group-hover:text-orange-600 flex items-center space-x-1 transition">
+                            <span>Klik untuk lihat detail</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Dropdown Kategori Berurutan A-Z (Halaman Katalog)
+        function renderCategoriesDropdown() {
+            const selectEl = document.getElementById('categorySelectFilter');
+            const categories = [...new Set(allProducts.map(p => p.category))].sort((a, b) => a.localeCompare(b));
+            
+            let html = `<option value="All">Semua Kategori (${allProducts.length})</option>`;
+            categories.forEach(cat => {
+                const count = allProducts.filter(p => p.category === cat).length;
+                html += `<option value="${cat}" ${currentCategory === cat ? 'selected' : ''}>${cat} (${count})</option>`;
+            });
+            selectEl.innerHTML = html;
+        }
+
+        function filterCategoryDropdown(cat) {
+            currentCategory = cat;
+            filterProducts();
+        }
+
+        // Dropdown Form Admin (Pilih atau Buat Baru)
+        function populateCategoryDropdowns(selectedCat = '') {
+            const selectEl = document.getElementById('prodCategorySelect');
+            const categories = [...new Set(getProducts().map(p => p.category))].sort((a, b) => a.localeCompare(b));
+
+            let html = `<option value="">-- Pilih Kategori --</option>`;
+            categories.forEach(cat => {
+                html += `<option value="${cat}" ${selectedCat === cat ? 'selected' : ''}>${cat}</option>`;
+            });
+            selectEl.innerHTML = html;
+        }
+
+        function toggleNewCategoryInput() {
+            isCreatingNewCategory = !isCreatingNewCategory;
+            const selectEl = document.getElementById('prodCategorySelect');
+            const inputEl = document.getElementById('prodCategoryCustom');
+            const textEl = document.getElementById('toggleCategoryText');
+
+            if (isCreatingNewCategory) {
+                selectEl.classList.add('hidden');
+                selectEl.removeAttribute('required');
+                inputEl.classList.remove('hidden');
+                inputEl.setAttribute('required', 'true');
+                inputEl.value = '';
+                textEl.innerText = "Pilih dari kategori yang sudah ada";
+            } else {
+                inputEl.classList.add('hidden');
+                inputEl.removeAttribute('required');
+                selectEl.classList.remove('hidden');
+                selectEl.setAttribute('required', 'true');
+                textEl.innerText = "Buat kategori baru";
+            }
+        }
+
+        function handleCategorySelectChange(val) {
+            // Callback tambahan jika dibutuhkan
+        }
+
+        // FUNGSI MODAL DETAIL PRODUK
+        function openProductModal(id) {
+            const p = allProducts.find(item => item.id == id);
+            if (!p) return;
+
+            const modalImage = document.getElementById('modalImage');
+            const modalImagePlaceholder = document.getElementById('modalImagePlaceholder');
+            if (p.image) {
+                modalImage.src = p.image;
+                modalImage.classList.remove('hidden');
+                modalImagePlaceholder.classList.add('hidden');
+            } else {
+                modalImage.classList.add('hidden');
+                modalImagePlaceholder.classList.remove('hidden');
+                modalImagePlaceholder.classList.add('flex');
+            }
+
+            document.getElementById('modalCategory').innerText = p.category;
+            document.getElementById('modalName').innerText = p.name;
+            document.getElementById('modalPrice').innerText = `Rp ${Number(p.price).toLocaleString('id-ID')}`;
+
+            const modalPartNo = document.getElementById('modalPartNo');
+            if (p.partNo) {
+                modalPartNo.innerText = `SKU: ${p.partNo}`;
+                modalPartNo.classList.remove('hidden');
+            } else {
+                modalPartNo.classList.add('hidden');
+            }
+
+            const modalBadges = document.getElementById('modalBadges');
+            let badgesHtml = '';
+            if (p.condition) badgesHtml += `<span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded font-medium border border-stone-200">${p.condition}</span>`;
+            if (p.warranty) badgesHtml += `<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>${p.warranty}</span>`;
+            if (p.weight) badgesHtml += `<span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded font-medium border border-stone-200"><i class="fa-solid fa-weight-hanging mr-1"></i>${p.weight}</span>`;
+            modalBadges.innerHTML = badgesHtml;
+
+            const modalFitmentContainer = document.getElementById('modalFitmentContainer');
+            if (p.fitment) {
+                document.getElementById('modalFitment').innerText = p.fitment;
+                modalFitmentContainer.classList.remove('hidden');
+            } else {
+                modalFitmentContainer.classList.add('hidden');
+            }
+
+            document.getElementById('modalDesc').innerText = p.desc || 'Belum ada deskripsi detail.';
+
+            const waMessage = encodeURIComponent(`Halo Admin JuJu.toko, saya berminat dengan produk:\n*${p.name}*\nKode/Part No: ${p.partNo || '-'}\nHarga: Rp ${Number(p.price).toLocaleString('id-ID')}`);
+            document.getElementById('modalWaBtn').href = `https://wa.me/${storeWaNumber}?text=${waMessage}`;
+
+            const modalShopBtn = document.getElementById('modalShopBtn');
+            const modalVideoBtn = document.getElementById('modalVideoBtn');
+
+            if (p.link) {
+                modalShopBtn.href = p.link;
+                modalShopBtn.classList.remove('hidden');
+            } else {
+                modalShopBtn.classList.add('hidden');
+            }
+
+            if (p.video) {
+                modalVideoBtn.href = p.video;
+                modalVideoBtn.classList.remove('hidden');
+            } else {
+                modalVideoBtn.classList.add('hidden');
+            }
+
+            const modal = document.getElementById('productModal');
+            const modalContent = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            const modalContent = document.getElementById('modalContent');
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) closeProductModal();
+        });
+
+        function renderAdminList() {
+            const listContainer = document.getElementById('adminProductList');
+            const searchKeyword = document.getElementById('adminSearchInput') ? document.getElementById('adminSearchInput').value.toLowerCase() : '';
+            const products = getProducts();
+            
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(searchKeyword) || 
+                p.category.toLowerCase().includes(searchKeyword) ||
+                (p.partNo && p.partNo.toLowerCase().includes(searchKeyword))
+            );
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-stone-500 py-4 text-center">Tidak ada produk yang cocok dengan pencarian.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(p => `
+                <div class="py-3 flex items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <div class="w-10 h-10 bg-stone-100 rounded-xl border border-stone-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                            ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-box text-stone-400 text-xs"></i>`}
+                        </div>
+                        <div class="truncate">
+                            <h4 class="text-xs font-bold text-stone-900 truncate">${p.name}</h4>
+                            <p class="text-[10px] text-stone-500">Rp ${Number(p.price).toLocaleString('id-ID')} • <span class="uppercase">${p.category}</span> ${p.partNo ? `• SKU: ${p.partNo}` : ''}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 flex-shrink-0">
+                        <button onclick="editProduct(${p.id})" class="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                            <i class="fa-solid fa-pen mr-1"></i> Edit
+                        </button>
+                        <button onclick="deleteProduct(${p.id})" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                            <i class="fa-solid fa-trash mr-1"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminCategories() {
+            const container = document.getElementById('adminCategoryList');
+            const products = getProducts();
+            const categories = [...new Set(products.map(p => p.category))].sort((a, b) => a.localeCompare(b));
+
+            if (categories.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-400">Belum ada kategori tersimpan.</p>`;
+                return;
+            }
+
+            container.innerHTML = categories.map(cat => `
+                <div class="bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-xl flex items-center space-x-2 text-xs font-bold text-stone-700">
+                    <span>${cat}</span>
+                    <button onclick="deleteCategory('${cat}')" class="text-rose-500 hover:text-rose-700 ml-1 transition" title="Hapus Kategori">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteCategory(categoryName) {
+            if (confirm(`Yakin ingin menghapus kategori "${categoryName}"? Produk terkait akan diubah menjadi "Uncategorized".`)) {
+                let products = getProducts();
+                products = products.map(p => {
+                    if (p.category === categoryName) {
+                        return { ...p, category: "Uncategorized" };
+                    }
+                    return p;
+                });
+                saveProducts(products);
+                loadProducts();
+                renderAdminList();
+                renderAdminCategories();
+                populateCategoryDropdowns();
+                alert(`Kategori "${categoryName}" telah dihapus!`);
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editIndex').value;
+            const name = document.getElementById('prodName').value;
+            const partNo = document.getElementById('prodPartNo').value;
+            
+            let category = "";
+            if (isCreatingNewCategory) {
+                category = document.getElementById('prodCategoryCustom').value.trim();
+            } else {
+                category = document.getElementById('prodCategorySelect').value;
+            }
+
+            if (!category) {
+                alert("Pilih atau masukkan kategori terlebih dahulu!");
+                return;
+            }
+
+            const price = document.getElementById('prodPrice').value;
+            const condition = document.getElementById('prodCondition').value;
+            const warranty = document.getElementById('prodWarranty').value;
+            const weight = document.getElementById('prodWeight').value;
+            const fitment = document.getElementById('prodFitment').value;
+            const link = document.getElementById('prodLink').value;
+            const video = document.getElementById('prodVideo').value;
+            const desc = document.getElementById('prodDesc').value;
+            const imageFile = document.getElementById('prodImage').files[0];
+
+            const saveItem = (imgData) => {
+                let products = getProducts();
+                if (editId !== "") {
+                    products = products.map(p => {
+                        if (p.id == editId) {
+                            return {
+                                ...p,
+                                name: name,
+                                partNo: partNo,
+                                category: category,
+                                price: Number(price),
+                                condition: condition,
+                                warranty: warranty,
+                                weight: weight,
+                                fitment: fitment,
+                                link: link,
+                                video: video,
+                                desc: desc,
+                                image: imgData !== undefined ? imgData : p.image
+                            };
+                        }
+                        return p;
+                    });
+                    alert("Produk berhasil diperbarui!");
+                } else {
+                    const newProduct = {
+                        id: Date.now(),
+                        name: name,
+                        partNo: partNo,
+                        category: category,
+                        price: Number(price),
+                        condition: condition,
+                        warranty: warranty,
+                        weight: weight,
+                        fitment: fitment,
+                        link: link,
+                        video: video,
+                        desc: desc,
+                        image: imgData || ""
+                    };
+                    products.unshift(newProduct);
+                    alert("Produk berhasil ditambahkan!");
+                }
+
+                saveProducts(products);
+                resetForm();
+                renderAdminList();
+                renderAdminCategories();
+                populateCategoryDropdowns();
+                navigateTo('catalog');
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.readAsDataURL(imageFile);
+                reader.onload = function () {
+                    saveItem(reader.result);
+                };
+            } else {
+                saveItem(undefined);
+            }
+        }
+
+        function editProduct(id) {
+            const products = getProducts();
+            const p = products.find(item => item.id == id);
+            if (!p) return;
+
+            document.getElementById('editIndex').value = p.id;
+            document.getElementById('prodName').value = p.name;
+            document.getElementById('prodPartNo').value = p.partNo || "";
+            
+            if (isCreatingNewCategory) {
+                toggleNewCategoryInput();
+            }
+            populateCategoryDropdowns(p.category);
+            document.getElementById('prodCategorySelect').value = p.category;
+
+            document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodCondition').value = p.condition || "Baru / Original";
+            document.getElementById('prodWarranty').value = p.warranty || "";
+            document.getElementById('prodWeight').value = p.weight || "";
+            document.getElementById('prodFitment').value = p.fitment || "";
+            document.getElementById('prodLink').value = p.link || "";
+            document.getElementById('prodVideo').value = p.video || "";
+            document.getElementById('prodDesc').value = p.desc || "";
+            
+            document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-orange-600 mr-2"></i><span>Edit Produk: ${p.name}</span>`;
+            document.getElementById('submitBtn').innerText = "Perbarui Produk";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            if (isCreatingNewCategory) {
+                toggleNewCategoryInput();
+            }
+            document.getElementById('editIndex').value = "";
+            document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-circle-plus text-orange-600 mr-2"></i><span>Tambah Produk / Spare Part Baru</span>`;
+            document.getElementById('submitBtn').innerText = "Simpan Produk";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            populateCategoryDropdowns();
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Yakin ingin menghapus produk ini?")) {
+                let products = getProducts();
+                products = products.filter(p => p.id !== id);
+                saveProducts(products);
+                renderAdminList();
+                renderAdminCategories();
+                loadProducts();
+                populateCategoryDropdowns();
+            }
+        }
+
+        function filterProducts() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allProducts.filter(p => {
+                const matchName = p.name.toLowerCase().includes(keyword);
+                const matchPartNo = p.partNo ? p.partNo.toLowerCase().includes(keyword) : false;
+                const matchFitment = p.fitment ? p.fitment.toLowerCase().includes(keyword) : false;
+                const matchCat = currentCategory === 'All' || p.category === currentCategory;
+                return (matchName || matchPartNo || matchFitment) && matchCat;
+            });
+            renderProducts(filtered);
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getProducts()));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "etalase_serba_ada_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    saveProducts(imported);
+                    loadProducts();
+                    renderAdminList();
+                    renderAdminCategories();
+                    populateCategoryDropdowns();
+                    alert("Data berhasil dipulihkan!");
+                } catch (err) {
+                    alert("Format file salah!");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        window.onload = handleRouting;
+    </script>
+</body>
+</html>
